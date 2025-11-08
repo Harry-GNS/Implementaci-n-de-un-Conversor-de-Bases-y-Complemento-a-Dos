@@ -220,10 +220,50 @@ def menu_complemento_a_dos():
                 return
 
         try:
-            ca2 = complemento_a_dos(x, bits)
-            type_print(f'Representación Ca2 ({bits} bits): {ca2}')
-            reconv = complemento_a_dos_a_decimal(ca2)
-            type_print('Reconversión a decimal desde Ca2: ' + str(reconv))
+            limite_min = -(1 << (bits - 1))
+            limite_max = (1 << (bits - 1)) - 1
+            if x < limite_min or x > limite_max:
+                raise OverflowError('Overflow: no cabe en el número de bits especificado')
+
+            mask = (1 << bits) - 1
+
+            if x >= 0:
+                bin_padded = format(x, 'b').zfill(bits)
+                type_print(f'Número positivo. Binario ({bits} bits): {bin_padded}')
+                ca2 = bin_padded
+            else:
+                abs_val = abs(x)
+                abs_bin = format(abs_val, 'b')
+                if len(abs_bin) > bits:
+                    raise OverflowError('Overflow: valor absoluto demasiado grande para los bits')
+                abs_bin_padded = abs_bin.zfill(bits)
+                type_print(f'Valor absoluto |X| en binario (relleno a {bits} bits): {abs_bin_padded}')
+                # complemento a uno
+                c1 = ''.join('1' if b == '0' else '0' for b in abs_bin_padded)
+                type_print(f'Complemento a uno (C1): {c1}')
+                # sumar 1
+                suma = (int(c1, 2) + 1) & mask
+                ca2 = format(suma, 'b').zfill(bits)
+                type_print(f'Sumar 1 al C1 -> Complemento a dos (Ca2): {ca2}')
+
+            # Verificación / reconversión mostrando el proceso
+            type_print('--- Verificación: revertir Ca2 a decimal ---')
+            type_print(f'Ca2 actual: {ca2}')
+            if ca2[0] == '0':
+                reconv = int(ca2, 2)
+                type_print('Bit de signo 0 -> número positivo')
+                type_print('Decimal reconvertido: ' + str(reconv))
+            else:
+                type_print('Bit de signo 1 -> número negativo')
+                # método: calcular valor -2^N + int(ca2,2)
+                valor = int(ca2, 2) - (1 << bits)
+                type_print('Cálculo: int(Ca2) - 2^N = ' + str(valor))
+                # alternativa mostrar invertir y sumar para demostrar
+                inv = ''.join('1' if b == '0' else '0' for b in ca2)
+                type_print('Invertir bits (C1 de Ca2): ' + inv)
+                suma_inv = (int(inv, 2) + 1)
+                type_print('Sumar 1 al C1 para obtener |X|: ' + str(suma_inv))
+                type_print('Decimal reconvertido: ' + str(valor))
         except OverflowError as e:
             print('Error:', e)
             print('1) Reintentar')
