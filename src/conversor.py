@@ -1,4 +1,24 @@
 import sys
+import time
+
+
+def type_print(text, delay=0.02):
+    for ch in str(text):
+        print(ch, end='', flush=True)
+        time.sleep(delay)
+    print()
+
+
+def print_menu_box(title, options, pause=0.12):
+    time.sleep(pause)
+    width = max(len(title), *(len(o) for o in options)) + 6
+    top = '+' + '-' * (width - 2) + '+'
+    print(top)
+    print('| ' + title.center(width - 4) + ' |')
+    print('+' + '=' * (width - 2) + '+')
+    for o in options:
+        print('| ' + o.ljust(width - 4) + ' |')
+    print(top)
 
 
 def convertir_decimal_a_base_entera(numero, base):
@@ -73,26 +93,21 @@ def menu_decimal_a_otras_bases():
             else:
                 return
     while True:
-        print('\nConvertir', n, 'a:')
-        print('1) Binario')
-        print('2) Octal')
-        print('3) Hexadecimal')
-        print('4) Todos')
-        print('5) Volver')
+        print_menu_box(f'Convertir {n} a', ['1) Binario', '2) Octal', '3) Hexadecimal', '4) Todos', '5) Volver'])
         op = input('Elija una opción: ')
         if op == '1':
-            print('Binario:', convertir_decimal_a_base_entera(n, 2))
+            type_print('Binario: ' + convertir_decimal_a_base_entera(n, 2))
             accion = post_conversion_menu()
         elif op == '2':
-            print('Octal:', convertir_decimal_a_base_entera(n, 8))
+            type_print('Octal: ' + convertir_decimal_a_base_entera(n, 8))
             accion = post_conversion_menu()
         elif op == '3':
-            print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
+            type_print('Hexadecimal: ' + convertir_decimal_a_base_entera(n, 16))
             accion = post_conversion_menu()
         elif op == '4' or op == '':
-            print('Binario:', convertir_decimal_a_base_entera(n, 2))
-            print('Octal:', convertir_decimal_a_base_entera(n, 8))
-            print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
+            type_print('Binario: ' + convertir_decimal_a_base_entera(n, 2))
+            type_print('Octal: ' + convertir_decimal_a_base_entera(n, 8))
+            type_print('Hexadecimal: ' + convertir_decimal_a_base_entera(n, 16))
             accion = post_conversion_menu()
         elif op == '5':
             break
@@ -109,10 +124,7 @@ def menu_decimal_a_otras_bases():
 
 
 def post_conversion_menu():
-    print('\nQué desea hacer ahora:')
-    print('1) Volver al submenú')
-    print('2) Volver al menú principal')
-    print('3) Salir del programa')
+    print_menu_box('Qué desea hacer ahora', ['1) Volver al submenú', '2) Volver al menú principal', '3) Salir del programa'])
     elec = input('Elija una opción: ')
     if elec == '1' or elec == '':
         return 'submenu'
@@ -127,11 +139,7 @@ def post_conversion_menu():
 
 def menu_otras_bases_a_decimal():
     while True:
-        print('\nConvertir a decimal desde:')
-        print('1) Binario (base 2)')
-        print('2) Octal (base 8)')
-        print('3) Hexadecimal (base 16)')
-        print('4) Volver')
+        print_menu_box('Convertir a decimal desde', ['1) Binario (base 2)', '2) Octal (base 8)', '3) Hexadecimal (base 16)', '4) Volver'])
         opcion = input('Elija una opción: ')
         if opcion == '1':
             base = 2
@@ -150,7 +158,7 @@ def menu_otras_bases_a_decimal():
             s = input(f'Ingrese el número en base {base}: ')
             try:
                 d = convertir_base_a_decimal(s, base)
-                print('Decimal:', d)
+                type_print('Decimal: ' + str(d))
             except Exception as e:
                 print('Error:', e)
                 print('1) Reintentar')
@@ -202,9 +210,9 @@ def menu_complemento_a_dos():
 
         try:
             ca2 = complemento_a_dos(x, bits)
-            print(f'Representación Ca2 ({bits} bits):', ca2)
+            type_print(f'Representación Ca2 ({bits} bits): {ca2}')
             reconv = complemento_a_dos_a_decimal(ca2)
-            print('Reconversión a decimal desde Ca2:', reconv)
+            type_print('Reconversión a decimal desde Ca2: ' + str(reconv))
         except OverflowError as e:
             print('Error:', e)
             print('1) Reintentar')
@@ -225,10 +233,7 @@ def menu_complemento_a_dos():
 
 
 def menu_avanzado():
-    print('Opciones avanzadas:')
-    print('1) Suma y resta en binario (Complemento a 2)')
-    print('2) Conversión en coma flotante (no implementado)')
-    print('3) Reducción de expresiones booleanas (no implementado)')
+    print_menu_box('Opciones avanzadas', ['1) Suma y resta en binario (Complemento a 2)', '2) Conversión en coma flotante (no implementado)', '3) Reducción de expresiones booleanas (no implementado)'])
     opc = input('Elegir opción (volver con Enter): ')
     if opc == '1':
         a = int(input('Primer sumando (decimal): '))
@@ -249,12 +254,7 @@ def menu_avanzado():
 
 def main():
     while True:
-        print('\n--- Conversor de Bases y Complemento a Dos ---')
-        print('1) Decimal -> Binario/Octal/Hex')
-        print('2) Bin/Oct/Hex -> Decimal')
-        print('3) Complemento a Dos (representación y verificación)')
-        print('4) Avanzado')
-        print('5) Salir')
+        print_menu_box('Conversor de Bases y Complemento a Dos', ['1) Decimal -> Binario/Octal/Hex', '2) Bin/Oct/Hex -> Decimal', '3) Complemento a Dos (representación y verificación)', '4) Avanzado', '5) Salir'])
         opcion = input('Elija una opción: ')
         if opcion == '1':
             menu_decimal_a_otras_bases()
