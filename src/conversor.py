@@ -88,6 +88,83 @@ def ca2_to_decimal_invert(ca2_str):
     return -magnitud
 
 
+def procesar_complemento_a_dos(numero, bits_num):
+    """Realiza la conversión a complemento a dos y muestra la verificación.
+
+    Lógica extraída desde el menú para mantener el menú limpio.
+    Lanza OverflowError si el número no cabe en los bits indicados.
+    """
+    limite_minimo = -(1 << (bits_num - 1))
+    limite_maximo = (1 << (bits_num - 1)) - 1
+    if numero < limite_minimo or numero > limite_maximo:
+        raise OverflowError('Overflow: no cabe en el número de bits especificado')
+
+    mascara = (1 << bits_num) - 1
+
+    if numero >= 0:
+        bin_relleno = format(numero, 'b').zfill(bits_num)
+        type_print(f'Número positivo. Binario ({bits_num} bits): {bin_relleno}')
+        ca2 = bin_relleno
+    else:
+        valor_abs = abs(numero)
+        bin_abs = format(valor_abs, 'b')
+        if len(bin_abs) > bits_num:
+            raise OverflowError('Overflow: valor absoluto demasiado grande para los bits')
+        bin_abs_relleno = bin_abs.zfill(bits_num)
+        type_print(f'Valor absoluto |X| en binario (relleno a {bits_num} bits): {bin_abs_relleno}')
+        # complemento a uno
+        complemento_uno = ''.join('1' if b == '0' else '0' for b in bin_abs_relleno)
+        type_print(f'Complemento a uno (C1): {complemento_uno}')
+        # sumar 1
+        suma_uno = (int(complemento_uno, 2) + 1) & mascara
+        ca2 = format(suma_uno, 'b').zfill(bits_num)
+        type_print(f'Sumar 1 al C1 -> Complemento a dos (Ca2): {ca2}')
+
+    # Verificación / reconversión mostrando el proceso
+    type_print('')
+    type_print('--- Verificación: revertir Ca2 a decimal ---')
+    type_print(f'Ca2 actual: {ca2}')
+    if ca2[0] == '0':
+        reconvertido = int(ca2, 2)
+        type_print('Bit de signo 0 -> número positivo')
+        # mostrar proceso de expansión polinómica (dígito * base^posición)
+        type_print('Proceso (expansión polinómica):')
+        contribuciones = []
+        suma_total = 0
+        # mostrar desde LSB (posición 0) hasta MSB
+        for pos, bit in enumerate(reversed(ca2)):
+            if bit == '1':
+                val = 1 << pos
+                contribuciones.append(f'1 * 2^{pos} = {val}')
+                suma_total += val
+            else:
+                contribuciones.append(f'0 * 2^{pos} = 0')
+        # imprimir algunas contribuciones (no todas si son muchas)
+        max_mostrar = 8
+        if len(contribuciones) <= max_mostrar:
+            for c in contribuciones:
+                type_print('  ' + c)
+        else:
+            # mostrar las últimas y las primeras para no ser muy verboso
+            for c in contribuciones[:4]:
+                type_print('  ' + c)
+            type_print('  ...')
+            for c in contribuciones[-4:]:
+                type_print('  ' + c)
+
+        type_print('Suma de contribuciones = ' + str(suma_total))
+        type_print('Decimal reconvertido: ' + str(reconvertido))
+    else:
+        type_print('Bit de signo 1 -> número negativo')
+        # método elegido: invertir y sumar 1 para obtener la magnitud
+        invertido = ''.join('1' if b == '0' else '0' for b in ca2)
+        type_print('Invertir bits (C1 de Ca2): ' + invertido)
+        magnitud = int(invertido, 2) + 1
+        type_print('Sumar 1 al C1 para obtener |X|: ' + str(magnitud))
+        type_print('Decimal reconvertido: -' + str(magnitud))
+        # resumen corto (solo mostrar la magnitud negativa calculada)
+
+
 def menu_decimal_a_otras_bases():
     while True:
         entrada = input('Ingrese un número entero decimal positivo: ')
@@ -229,75 +306,7 @@ def menu_complemento_a_dos():
                 return
 
         try:
-            limite_minimo = -(1 << (bits_num - 1))
-            limite_maximo = (1 << (bits_num - 1)) - 1
-            if numero < limite_minimo or numero > limite_maximo:
-                raise OverflowError('Overflow: no cabe en el número de bits especificado')
-
-            mascara = (1 << bits_num) - 1
-
-            if numero >= 0:
-                bin_relleno = format(numero, 'b').zfill(bits_num)
-                type_print(f'Número positivo. Binario ({bits_num} bits): {bin_relleno}')
-                ca2 = bin_relleno
-            else:
-                valor_abs = abs(numero)
-                bin_abs = format(valor_abs, 'b')
-                if len(bin_abs) > bits_num:
-                    raise OverflowError('Overflow: valor absoluto demasiado grande para los bits')
-                bin_abs_relleno = bin_abs.zfill(bits_num)
-                type_print(f'Valor absoluto |X| en binario (relleno a {bits_num} bits): {bin_abs_relleno}')
-                # complemento a uno
-                complemento_uno = ''.join('1' if b == '0' else '0' for b in bin_abs_relleno)
-                type_print(f'Complemento a uno (C1): {complemento_uno}')
-                # sumar 1
-                suma_uno = (int(complemento_uno, 2) + 1) & mascara
-                ca2 = format(suma_uno, 'b').zfill(bits_num)
-                type_print(f'Sumar 1 al C1 -> Complemento a dos (Ca2): {ca2}')
-
-            # Verificación / reconversión mostrando el proceso
-            type_print('')
-            type_print('--- Verificación: revertir Ca2 a decimal ---')
-            type_print(f'Ca2 actual: {ca2}')
-            if ca2[0] == '0':
-                reconvertido = int(ca2, 2)
-                type_print('Bit de signo 0 -> número positivo')
-                # mostrar proceso de expansión polinómica (dígito * base^posición)
-                type_print('Proceso (expansión polinómica):')
-                contribuciones = []
-                suma_total = 0
-                # mostrar desde LSB (posición 0) hasta MSB
-                for pos, bit in enumerate(reversed(ca2)):
-                    if bit == '1':
-                        val = 1 << pos
-                        contribuciones.append(f'1 * 2^{pos} = {val}')
-                        suma_total += val
-                    else:
-                        contribuciones.append(f'0 * 2^{pos} = 0')
-                # imprimir algunas contribuciones (no todas si son muchas)
-                max_mostrar = 8
-                if len(contribuciones) <= max_mostrar:
-                    for c in contribuciones:
-                        type_print('  ' + c)
-                else:
-                    # mostrar las últimas y las primeras para no ser muy verboso
-                    for c in contribuciones[:4]:
-                        type_print('  ' + c)
-                    type_print('  ...')
-                    for c in contribuciones[-4:]:
-                        type_print('  ' + c)
-
-                type_print('Suma de contribuciones = ' + str(suma_total))
-                type_print('Decimal reconvertido: ' + str(reconvertido))
-            else:
-                type_print('Bit de signo 1 -> número negativo')
-                # método elegido: invertir y sumar 1 para obtener la magnitud
-                invertido = ''.join('1' if b == '0' else '0' for b in ca2)
-                type_print('Invertir bits (C1 de Ca2): ' + invertido)
-                magnitud = int(invertido, 2) + 1
-                type_print('Sumar 1 al C1 para obtener |X|: ' + str(magnitud))
-                type_print('Decimal reconvertido: -' + str(magnitud))
-                # resumen corto (solo mostrar la magnitud negativa calculada)
+            procesar_complemento_a_dos(numero, bits_num)
         except OverflowError as e:
             print('Error:', e)
             print('1) Reintentar')
