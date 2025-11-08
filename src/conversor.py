@@ -15,14 +15,12 @@ def print_menu_box(title, options, pause=0.22):
     top = '+' + '-' * (width - 2) + '+'
     
     print()
-    print()
     print(top)
     print('| ' + title.center(width - 4) + ' |')
     print('+' + '=' * (width - 2) + '+')
     for o in options:
         print('| ' + o.ljust(width - 4) + ' |')
     print(top)
-    print()
     print()
 
 
