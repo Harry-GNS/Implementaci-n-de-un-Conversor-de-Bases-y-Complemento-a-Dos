@@ -280,21 +280,16 @@ def menu_complemento_a_dos():
 
                 type_print('Suma de contribuciones = ' + str(total))
                 type_print('Decimal reconvertido: ' + str(reconv))
-                # resumen corto
-                type_print(f'Resumen breve: {reconv} (int(Ca2))')
             else:
                 type_print('Bit de signo 1 -> número negativo')
-                # método: calcular valor -2^N + int(ca2,2)
-                valor = int(ca2, 2) - (1 << bits)
-                type_print('Cálculo: int(Ca2) - 2^N = ' + str(valor))
-                # alternativa mostrar invertir y sumar para demostrar
+                # método elegido: invertir y sumar 1 para obtener la magnitud
                 inv = ''.join('1' if b == '0' else '0' for b in ca2)
                 type_print('Invertir bits (C1 de Ca2): ' + inv)
-                suma_inv = (int(inv, 2) + 1)
-                type_print('Sumar 1 al C1 para obtener |X|: ' + str(suma_inv))
-                type_print('Decimal reconvertido: ' + str(valor))
-                # resumen corto
-                type_print(f'Resumen breve: {valor} (int(Ca2)-2^{bits})')
+                mag = int(inv, 2) + 1
+                type_print('Sumar 1 al C1 para obtener |X|: ' + str(mag))
+                type_print('Decimal reconvertido: -' + str(mag))
+                # resumen corto (solo mostrar la magnitud negativa calculada)
+                type_print(f'Resumen breve: -{mag} (invertir+1)')
         except OverflowError as e:
             print('Error:', e)
             print('1) Reintentar')
