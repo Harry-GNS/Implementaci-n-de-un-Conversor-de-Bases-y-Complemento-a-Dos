@@ -79,6 +79,15 @@ def complemento_a_dos_a_decimal(binario_str):
         return valor - (1 << bits)
 
 
+def ca2_to_decimal_invert(ca2_str):
+    """Convertir Ca2 a decimal usando el método invertir+1 para negativos."""
+    if ca2_str[0] == '0':
+        return int(ca2_str, 2)
+    inv = ''.join('1' if b == '0' else '0' for b in ca2_str)
+    mag = int(inv, 2) + 1
+    return -mag
+
+
 def menu_decimal_a_otras_bases():
     while True:
         entrada = input('Ingrese un número entero decimal positivo: ')
@@ -289,7 +298,6 @@ def menu_complemento_a_dos():
                 type_print('Sumar 1 al C1 para obtener |X|: ' + str(mag))
                 type_print('Decimal reconvertido: -' + str(mag))
                 # resumen corto (solo mostrar la magnitud negativa calculada)
-                type_print(f'Resumen breve: -{mag} (invertir+1)')
         except OverflowError as e:
             print('Error:', e)
             print('1) Reintentar')
@@ -310,23 +318,61 @@ def menu_complemento_a_dos():
 
 
 def menu_avanzado():
-    print_menu_box('Opciones avanzadas', ['1) Suma y resta en binario (Complemento a 2)', '2) Conversión en coma flotante (no implementado)', '3) Reducción de expresiones booleanas (no implementado)'])
-    opc = input('Elegir opción (volver con Enter): ')
+    print_menu_box('Avanzado: Suma y Resta (Complemento a 2)', ['1) Suma', '2) Resta', '3) Volver'])
+    opc = input('Elija una opción: ')
+    if opc == '3' or opc == '':
+        return
+    if opc not in ('1', '2'):
+        print('Opción no válida')
+        return
+
+    try:
+        a = int(input('Primer operando (decimal): '))
+        b = int(input('Segundo operando (decimal): '))
+        bits = int(input('Bits para la operación (ej. 8,16,32): '))
+    except Exception:
+        print('Entrada inválida')
+        return
+
+    try:
+        ra = complemento_a_dos(a, bits)
+        rb = complemento_a_dos(b, bits)
+    except OverflowError as e:
+        print('Error en representación de operandos:', e)
+        return
+
+    type_print('A (Ca2): ' + ra)
+    type_print('B (Ca2): ' + rb)
+
     if opc == '1':
-        a = int(input('Primer sumando (decimal): '))
-        b = int(input('Segundo sumando (decimal): '))
-        bits = int(input('Bits para la operación: '))
-        try:
-            ra = complemento_a_dos(a, bits)
-            rb = complemento_a_dos(b, bits)
-            suma = (a + b)
-            ca2suma = complemento_a_dos(suma, bits)
-            print('A (Ca2):', ra)
-            print('B (Ca2):', rb)
-            print('Suma decimal:', suma)
-            print('Suma (Ca2) con truncamiento a', bits, 'bits:', ca2suma)
-        except OverflowError as e:
-            print('Error:', e)
+        esperado = a + b
+        operacion = 'Suma'
+    else:
+        esperado = a - b
+        operacion = 'Resta'
+
+    mask = (1 << bits) - 1
+    ca2_res = format(esperado & mask, 'b').zfill(bits)
+
+    # mostrar resultado en Ca2 y reconvertir usando invertir+1 para negativos
+    type_print(f'{operacion} decimal esperada: {esperado}')
+    type_print('Resultado (Ca2, truncado a N bits): ' + ca2_res)
+
+    reconv = ca2_to_decimal_invert(ca2_res)
+
+    # overflow si el valor aritmético no cabe en N bits
+    limite_min = -(1 << (bits - 1))
+    limite_max = (1 << (bits - 1)) - 1
+    if esperado < limite_min or esperado > limite_max:
+        print('Advertencia: overflow aritmético - el resultado real no cabe en', bits, 'bits')
+
+    accion = post_conversion_menu()
+    if accion == 'submenu':
+        return
+    elif accion == 'main':
+        return
+    elif accion == 'exit':
+        sys.exit(0)
 
 
 def main():
