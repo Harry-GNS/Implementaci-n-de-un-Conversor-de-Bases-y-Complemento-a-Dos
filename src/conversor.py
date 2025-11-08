@@ -260,7 +260,7 @@ def menu_otras_bases_a_decimal():
                 print('Error:', e)
                 print('1) Reintentar')
                 print('2) Volver al submenú')
-                eleccion = input('Elija una opción: ')
+                eleccion = input('Elije una opción: ')
                 if eleccion == '1' or eleccion == '':
                     continue
                 else:

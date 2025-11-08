@@ -115,7 +115,7 @@ Objetivo: convertir un entero decimal no negativo a sus representaciones en base
   \caption{Captura de la función decimal\_a\_base.}
 \end{figure}
 
-\noindent\textbf{Resumen del algoritmo (Decimal $\rightarrow$ Base).} La función recibe un entero no negativo y la base destino (2, 8 o 16). Itera dividiendo el número por la base, guarda el residuo en cada paso y continúa con el cociente hasta que éste sea cero. Los residuos se leen en orden inverso para formar la representación final; para dígitos mayores a 9 se usa una tabla de símbolos (A--F). Se gestiona el caso 0 de forma explícita y se rellena (pad) según el tamaño solicitado cuando aplica.
+\noindent\textbf La función recibe un entero no negativo y la base destino (2, 8 o 16). Itera dividiendo el número por la base, guarda el residuo en cada paso y continúa con el cociente hasta que éste sea cero. Los residuos se leen en orden inverso para formar la representación final; para dígitos mayores a 9 se usa una tabla de símbolos (A--F). Se gestiona el caso 0 de forma explícita y se rellena (pad) según el tamaño solicitado cuando aplica.
 
 \subsection{Fase 2: Binario, Octal y Hexadecimal a Decimal}
 Objetivo: convertir una cadena que representa un número en base 2, 8 o 16 al valor entero decimal correspondiente.
@@ -183,16 +183,11 @@ Incluya las conclusiones sobre la correcta implementación de los algoritmos, li
 
 % ---------------- REFERENCIAS ----------------
 \begin{thebibliography}{9}
-\bibitem{t1} Patterson, D. A., Hennessy, J. L. (2013). Computer Organization and Design. (Referencias sobre representación y aritmética de enteros).
-\bibitem{t2} Tanenbaum, A. (2016). Structured Computer Organization.
+
 \end{thebibliography}
 
 % ---------------- APÉNDICE (MATERIAL ADICIONAL) ----------------
-\appendix
-\section{Material adicional}
-Si ya ha incluido las imágenes que ilustran los métodos en las secciones de desarrollo, no es necesario repetir el código aquí. El código fuente completo se encuentra en el repositorio del proyecto (archivo \texttt{src/conversor.py}) y las funciones principales se explican en detalle en las secciones de desarrollo del presente informe.
 
-\vspace{1cm}
 
 % ---------------- FIN ----------------
 \end{document}
