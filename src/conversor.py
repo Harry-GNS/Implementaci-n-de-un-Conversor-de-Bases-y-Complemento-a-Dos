@@ -46,13 +46,36 @@ def complemento_a_dos_a_decimal(binario_str):
 
 
 def menu_decimal_a_otras_bases():
-    n = int(input('Ingrese un número entero decimal positivo: '))
+    try:
+        n = int(input('Ingrese un número entero decimal positivo: '))
+    except ValueError:
+        print('Entrada no válida')
+        return
     if n < 0:
         print('Número debe ser positivo')
         return
-    print('Binario:', convertir_decimal_a_base_entera(n, 2))
-    print('Octal:', convertir_decimal_a_base_entera(n, 8))
-    print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
+    while True:
+        print('\nConvertir a:')
+        print('1) Binario')
+        print('2) Octal')
+        print('3) Hexadecimal')
+        print('4) Todos')
+        print('5) Volver')
+        op = input('Elija una opción: ')
+        if op == '1':
+            print('Binario:', convertir_decimal_a_base_entera(n, 2))
+        elif op == '2':
+            print('Octal:', convertir_decimal_a_base_entera(n, 8))
+        elif op == '3':
+            print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
+        elif op == '4':
+            print('Binario:', convertir_decimal_a_base_entera(n, 2))
+            print('Octal:', convertir_decimal_a_base_entera(n, 8))
+            print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
+        elif op == '5' or op == '':
+            break
+        else:
+            print('Opción no válida')
 
 
 def menu_otras_bases_a_decimal():
