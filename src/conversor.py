@@ -127,43 +127,47 @@ def post_conversion_menu():
 
 def menu_otras_bases_a_decimal():
     while True:
-        print('Elija la base de entrada: 2-binario, 8-octal, 16-hexadecimal')
-        b_str = input('Base: ')
-        try:
-            b = int(b_str)
-            if b not in (2, 8, 16):
-                raise ValueError('Base inválida')
-        except Exception:
-            print('Base inválida')
-            print('1) Reintentar')
-            print('2) Volver al menú principal')
-            ele = input('Elija una opción: ')
-            if ele == '1' or ele == '':
-                continue
-            else:
-                return
-
-        s = input('Ingrese el número en esa base: ')
-        try:
-            d = convertir_base_a_decimal(s, b)
-            print('Decimal:', d)
-        except Exception as e:
-            print('Error:', e)
-            print('1) Reintentar')
-            print('2) Volver al menú principal')
-            ele = input('Elija una opción: ')
-            if ele == '1' or ele == '':
-                continue
-            else:
-                return
-
-        accion = post_conversion_menu()
-        if accion == 'submenu':
-            continue
-        elif accion == 'main':
+        print('\nConvertir a decimal desde:')
+        print('1) Binario (base 2)')
+        print('2) Octal (base 8)')
+        print('3) Hexadecimal (base 16)')
+        print('4) Volver')
+        opcion = input('Elija una opción: ')
+        if opcion == '1':
+            base = 2
+        elif opcion == '2':
+            base = 8
+        elif opcion == '3':
+            base = 16
+        elif opcion == '4' or opcion == '':
             return
-        elif accion == 'exit':
-            sys.exit(0)
+        else:
+            print('Opción no válida')
+            continue
+
+        # pedir número en la base seleccionada
+        while True:
+            s = input(f'Ingrese el número en base {base}: ')
+            try:
+                d = convertir_base_a_decimal(s, base)
+                print('Decimal:', d)
+            except Exception as e:
+                print('Error:', e)
+                print('1) Reintentar')
+                print('2) Volver al submenú')
+                ele = input('Elija una opción: ')
+                if ele == '1' or ele == '':
+                    continue
+                else:
+                    break
+
+            accion = post_conversion_menu()
+            if accion == 'submenu':
+                break
+            elif accion == 'main':
+                return
+            elif accion == 'exit':
+                sys.exit(0)
 
 
 def menu_complemento_a_dos():
