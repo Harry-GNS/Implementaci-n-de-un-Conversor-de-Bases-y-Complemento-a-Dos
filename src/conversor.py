@@ -253,6 +253,32 @@ def menu_complemento_a_dos():
             if ca2[0] == '0':
                 reconv = int(ca2, 2)
                 type_print('Bit de signo 0 -> número positivo')
+                # mostrar proceso de expansión polinómica (dígito * base^posición)
+                type_print('Proceso (expansión polinómica):')
+                contribs = []
+                total = 0
+                # mostrar desde LSB (posición 0) hasta MSB
+                for i, bit in enumerate(reversed(ca2)):
+                    if bit == '1':
+                        val = 1 << i
+                        contribs.append(f'1 * 2^{i} = {val}')
+                        total += val
+                    else:
+                        contribs.append(f'0 * 2^{i} = 0')
+                # imprimir algunas contribuciones (no todas si son muchas)
+                max_show = 8
+                if len(contribs) <= max_show:
+                    for c in contribs:
+                        type_print('  ' + c)
+                else:
+                    # mostrar las últimas y las primeras para no ser muy verboso
+                    for c in contribs[:4]:
+                        type_print('  ' + c)
+                    type_print('  ...')
+                    for c in contribs[-4:]:
+                        type_print('  ' + c)
+
+                type_print('Suma de contribuciones = ' + str(total))
                 type_print('Decimal reconvertido: ' + str(reconv))
             else:
                 type_print('Bit de signo 1 -> número negativo')
