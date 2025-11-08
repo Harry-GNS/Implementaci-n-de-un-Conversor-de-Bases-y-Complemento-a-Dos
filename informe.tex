@@ -105,62 +105,62 @@ Se desarrolló el código en Python en un único módulo que contiene las funcio
 \section{Desarrollo}
 A continuación se describen en detalle las cuatro fases del proyecto, con explicación del algoritmo y un espacio reservado para incluir imágenes o diagramas de cada método.
 
-\subsection{Fase 1: Decimal $\rightarrow$ Binario / Octal / Hexadecimal}
+\subsection{Fase 1: Decimal a Binario, Octal y Hexadecimal}
 Objetivo: convertir un entero decimal no negativo a sus representaciones en base 2, 8 y 16.
 
-\begin{figure}[H]
+  \begin{figure}[H]
   \centering
-  % Sustituya 'img_decimal_a_base.png' por su imagen en Overleaf
-  \includegraphics[width=0.8\textwidth]{images/decimal_a_base_placeholder.png}
-  \caption{Ilustración del proceso de divisiones sucesivas (reemplazar imagen).}
+  % Captura del método en el código fuente que implementa Decimal -> Base
+  \includegraphics[width=0.8\textwidth]{images/fase1_metodo_decimal_a_base.png}
+  \caption{Captura de la función decimal\_a\_base.}
 \end{figure}
 
-Explicación del algoritmo: se aplican divisiones sucesivas por la base deseada; en cada paso se obtiene el residuo (un dígito de la nueva base) y se continúa con el cociente hasta llegar a cero. Los residuos recogidos forman la representación en la nueva base cuando se leen en orden inverso (último residuo = dígito más significativo). Este proceso admite bases hasta 16 usando una tabla de símbolos para dígitos mayores a 9.
+\noindent\textbf{Resumen del algoritmo (Decimal $\rightarrow$ Base).} La función recibe un entero no negativo y la base destino (2, 8 o 16). Itera dividiendo el número por la base, guarda el residuo en cada paso y continúa con el cociente hasta que éste sea cero. Los residuos se leen en orden inverso para formar la representación final; para dígitos mayores a 9 se usa una tabla de símbolos (A--F). Se gestiona el caso 0 de forma explícita y se rellena (pad) según el tamaño solicitado cuando aplica.
 
-\subsection{Fase 2: Binario/Octal/Hexadecimal $\rightarrow$ Decimal}
+\subsection{Fase 2: Binario, Octal y Hexadecimal a Decimal}
 Objetivo: convertir una cadena que representa un número en base 2, 8 o 16 al valor entero decimal correspondiente.
 
-\begin{figure}[H]
+  \begin{figure}[H]
   \centering
-  % Sustituya 'img_base_a_decimal.png' por su imagen en Overleaf
-  \includegraphics[width=0.8\textwidth]{images/base_a_decimal_placeholder.png}
-  \caption{Proceso de evaluación posicional para conversión a decimal (reemplazar imagen).}
+  % Captura del método en el código fuente que implementa Base -> Decimal
+  \includegraphics[width=0.8\textwidth]{images/fase2_metodo_base_a_decimal.png}
+  \caption{Captura de la función base\_a\_decimal.}
 \end{figure}
 
-Explicación del algoritmo: se evalúa la cadena de dígitos de izquierda a derecha acumulando un valor: en cada paso se multiplica el acumulador por la base y se suma el valor del dígito actual (convertido desde su carácter). De este modo se realiza una suma ponderada por potencias de la base sin necesidad de potencias explícitas por cada posición.
+La función valida cada carácter de la cadena según la base y lo convierte a su valor numérico. Recorre la cadena de izquierda a derecha acumulando: \texttt{acc = acc * base + digito}. Este método implementa la evaluación posicional de forma eficiente y detecta dígitos no válidos según la base.
 
 \subsection{Fase 3: Complemento a Dos (representación y reconversión)}
 Objetivo: generar la representación en Complemento a Dos (Ca2) para un entero con signo con N bits, y reconvertir desde Ca2 a decimal usando invertir+1 para negativos.
 
-\begin{figure}[H]
+  \begin{figure}[H]
   \centering
-  % Sustituya 'img_complemento_a_dos.png' por su imagen en Overleaf
-  \includegraphics[width=0.8\textwidth]{images/ca2_generacion_placeholder.png}
-  \caption{Diagrama del proceso de generar Ca2 (reemplazar imagen).}
+  % Captura del método en el código fuente que genera Complemento a Dos
+  \includegraphics[width=0.8\textwidth]{images/fase3_metodo_generar_ca2.png}
+  \caption{Captura de la función a\_complemento\_a\_dos.}
 \end{figure}
 
-Explicación del algoritmo de generación: primero se verifica que el número quepa en el rango representable con N bits; para positivos se calcula su binario y se rellena a N bits; para negativos se toma el valor absoluto, se convierte y rellena a N bits, se invierten los bits (complemento a uno) y se suma 1 para obtener la representación Ca2.
+La función comprueba primero que el entero cabe en el rango de N bits. Para números positivos devuelve la representación binaria rellenada a N bits. Para negativos calcula la magnitud en binario a N bits, invierte los bits y suma 1 enmascarando a N bits para obtener la representación en complemento a dos.
 
-\begin{figure}[H]
+  \begin{figure}[H]
   \centering
-  % Sustituya 'img_ca2_reconversion.png' por su imagen en Overleaf
-  \includegraphics[width=0.8\textwidth]{images/ca2_reconversion_placeholder.png}
-  \caption{Reconversión de Ca2 a decimal usando invertir+1 (reemplazar imagen).}
+  % Captura del método en el código fuente que reconvierte Ca2 a entero
+  \includegraphics[width=0.8\textwidth]{images/fase3_metodo_reconvertir_ca2.png}
+  \caption{Captura de la función ca2\_a\_decimal.}
 \end{figure}
 
-Explicación del algoritmo de reconversión: si el bit más significativo es 0, el número es positivo y se convierte directamente; si es 1, se invierten los bits y se suma 1 para obtener la magnitud, cuyo valor se toma como negativo. Este método (invertir+1) recupera la magnitud original en Ca2.
+Si el bit de signo es 0 la función interpreta la cadena como un entero positivo directo. Si el bit de signo es 1 invierte los bits, suma 1 y devuelve el resultado con signo negativo. La operación se realiza en un dominio de N bits y se enmascara para evitar desbordes intermedios.
 
 \subsection{Fase 4: Operaciones avanzadas — Suma y Resta usando Ca2}
 Objetivo: realizar suma y resta de enteros utilizando la representación en Complemento a Dos con truncamiento a N bits y detección de overflow.
 
-\begin{figure}[H]
+  \begin{figure}[H]
   \centering
-  % Sustituya 'img_suma_resta_ca2.png' por su imagen en Overleaf
-  \includegraphics[width=0.8\textwidth]{images/suma_resta_ca2_placeholder.png}
-  \caption{Esquema de suma/resta con truncamiento a N bits (reemplazar imagen).}
+  % Captura del método en el código fuente que implementa suma y resta en Ca2
+  \includegraphics[width=0.8\textwidth]{images/fase4_metodo_suma_resta_ca2.png}
+  \caption{Captura de la función suma\_ca2.}
 \end{figure}
 
-Explicación del algoritmo: se representan ambos operandos en Ca2 con N bits, se realiza la operación aritmética en enteros, y el resultado se trunca a N bits aplicando una máscara. El valor truncado se interpreta con el método invertir+1 si el bit de signo es 1. Para detectar overflow se compara el resultado aritmético real con el rango representable $[-2^{N-1},2^{N-1}-1]$; si queda fuera, se reporta advertencia de overflow.
+Ambos operandos se codifican en N bits como complemento a dos. Se realiza la operación en el dominio entero y se aplica una máscara para truncar a N bits. El resultado truncado se interpreta como complemento a dos. Para detectar overflow se compara el resultado aritmético sin truncar con el rango representable $[-2^{N-1}, 2^{N-1}-1]$ y se marca la condición cuando corresponde.
 
 \paragraph{Nota sobre el desarrollo de menús y la interfaz:}
 Durante el desarrollo las interfaces de menú se fueron construyendo en paralelo con las fases para facilitar pruebas interactivas. Se añadió una función de salida animada (`type_print`) para mejorar la legibilidad en consola y se decidió mantener la interfaz por consola (no interfaz gráfica) porque el objetivo principal era asegurar la corrección y trazabilidad del resultado, no la representación gráfica. Estas decisiones permitieron iterar rápidamente y centrarse en algoritmos y validación.
