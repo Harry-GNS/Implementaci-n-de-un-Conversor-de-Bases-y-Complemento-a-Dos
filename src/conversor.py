@@ -1,12 +1,17 @@
 import sys
 import time
 
+# Configuración de animaciones
+ANIMATE_TITLES = True
+TITLE_DELAY = 0.02
 
-def type_print(text, delay=0.02):
+
+def type_print(text, delay=0.02, end=True):
     for ch in str(text):
         print(ch, end='', flush=True)
         time.sleep(delay)
-    print()
+    if end:
+        print()
 
 
 def print_menu_box(title, options, pause=0.22):
@@ -16,7 +21,13 @@ def print_menu_box(title, options, pause=0.22):
     
     print()
     print(top)
-    print('| ' + title.center(width - 4) + ' |')
+    # título animado opcional
+    if ANIMATE_TITLES:
+        print('| ', end='')
+        type_print(title.center(width - 4), delay=TITLE_DELAY, end=False)
+        print(' |')
+    else:
+        print('| ' + title.center(width - 4) + ' |')
     print('+' + '=' * (width - 2) + '+')
     for o in options:
         print('| ' + o.ljust(width - 4) + ' |')
