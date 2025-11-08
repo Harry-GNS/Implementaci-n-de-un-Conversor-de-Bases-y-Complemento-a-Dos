@@ -318,61 +318,66 @@ def menu_complemento_a_dos():
 
 
 def menu_avanzado():
-    print_menu_box('Avanzado: Suma y Resta (Complemento a 2)', ['1) Suma', '2) Resta', '3) Volver'])
-    opc = input('Elija una opción: ')
-    if opc == '3' or opc == '':
-        return
-    if opc not in ('1', '2'):
-        print('Opción no válida')
-        return
+    # Mantener el submenú en bucle para que "Volver al submenú" funcione correctamente
+    while True:
+        print_menu_box('Avanzado: Suma y Resta (Complemento a 2)', ['1) Suma', '2) Resta', '3) Volver'])
+        opc = input('Elija una opción: ')
+        if opc == '3' or opc == '':
+            return
+        if opc not in ('1', '2'):
+            print('Opción no válida')
+            continue
 
-    try:
-        a = int(input('Primer operando (decimal): '))
-        b = int(input('Segundo operando (decimal): '))
-        bits = int(input('Bits para la operación (ej. 8,16,32): '))
-    except Exception:
-        print('Entrada inválida')
-        return
+        try:
+            a = int(input('Primer operando (decimal): '))
+            b = int(input('Segundo operando (decimal): '))
+            bits = int(input('Bits para la operación (ej. 8,16,32): '))
+        except Exception:
+            print('Entrada inválida')
+            # volver a mostrar el submenú
+            continue
 
-    try:
-        ra = complemento_a_dos(a, bits)
-        rb = complemento_a_dos(b, bits)
-    except OverflowError as e:
-        print('Error en representación de operandos:', e)
-        return
+        try:
+            ra = complemento_a_dos(a, bits)
+            rb = complemento_a_dos(b, bits)
+        except OverflowError as e:
+            print('Error en representación de operandos:', e)
+            # volver a mostrar el submenú
+            continue
 
-    type_print('A (Ca2): ' + ra)
-    type_print('B (Ca2): ' + rb)
+        type_print('A (Ca2): ' + ra)
+        type_print('B (Ca2): ' + rb)
 
-    if opc == '1':
-        esperado = a + b
-        operacion = 'Suma'
-    else:
-        esperado = a - b
-        operacion = 'Resta'
+        if opc == '1':
+            esperado = a + b
+            operacion = 'Suma'
+        else:
+            esperado = a - b
+            operacion = 'Resta'
 
-    mask = (1 << bits) - 1
-    ca2_res = format(esperado & mask, 'b').zfill(bits)
+        mask = (1 << bits) - 1
+        ca2_res = format(esperado & mask, 'b').zfill(bits)
 
-    # mostrar resultado en Ca2 y reconvertir usando invertir+1 para negativos
-    type_print(f'{operacion} decimal esperada: {esperado}')
-    type_print('Resultado (Ca2, truncado a N bits): ' + ca2_res)
+        # mostrar resultado en Ca2 y reconvertir usando invertir+1 para negativos
+        type_print(f'{operacion} decimal esperada: {esperado}')
+        type_print('Resultado (Ca2, truncado a N bits): ' + ca2_res)
 
-    reconv = ca2_to_decimal_invert(ca2_res)
+        reconv = ca2_to_decimal_invert(ca2_res)
 
-    # overflow si el valor aritmético no cabe en N bits
-    limite_min = -(1 << (bits - 1))
-    limite_max = (1 << (bits - 1)) - 1
-    if esperado < limite_min or esperado > limite_max:
-        print('Advertencia: overflow aritmético - el resultado real no cabe en', bits, 'bits')
+        # overflow si el valor aritmético no cabe en N bits
+        limite_min = -(1 << (bits - 1))
+        limite_max = (1 << (bits - 1)) - 1
+        if esperado < limite_min or esperado > limite_max:
+            print('Advertencia: overflow aritmético - el resultado real no cabe en', bits, 'bits')
 
-    accion = post_conversion_menu()
-    if accion == 'submenu':
-        return
-    elif accion == 'main':
-        return
-    elif accion == 'exit':
-        sys.exit(0)
+        accion = post_conversion_menu()
+        if accion == 'submenu':
+            # volver a mostrar el submenú
+            continue
+        elif accion == 'main':
+            return
+        elif accion == 'exit':
+            sys.exit(0)
 
 
 def main():
