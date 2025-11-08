@@ -68,11 +68,11 @@ def menu_decimal_a_otras_bases():
             print('Octal:', convertir_decimal_a_base_entera(n, 8))
         elif op == '3':
             print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
-        elif op == '4':
+        elif op == '4' or op == '':
             print('Binario:', convertir_decimal_a_base_entera(n, 2))
             print('Octal:', convertir_decimal_a_base_entera(n, 8))
             print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
-        elif op == '5' or op == '':
+        elif op == '5':
             break
         else:
             print('Opción no válida')
