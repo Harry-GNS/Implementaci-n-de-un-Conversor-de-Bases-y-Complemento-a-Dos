@@ -126,26 +126,98 @@ def post_conversion_menu():
 
 
 def menu_otras_bases_a_decimal():
-    print('Elija la base de entrada: 2-binario, 8-octal, 16-hexadecimal')
-    b = int(input('Base: '))
-    s = input('Ingrese el número en esa base: ')
-    try:
-        d = convertir_base_a_decimal(s, b)
-        print('Decimal:', d)
-    except Exception as e:
-        print('Error:', e)
+    while True:
+        print('Elija la base de entrada: 2-binario, 8-octal, 16-hexadecimal')
+        b_str = input('Base: ')
+        try:
+            b = int(b_str)
+            if b not in (2, 8, 16):
+                raise ValueError('Base inválida')
+        except Exception:
+            print('Base inválida')
+            print('1) Reintentar')
+            print('2) Volver al menú principal')
+            ele = input('Elija una opción: ')
+            if ele == '1' or ele == '':
+                continue
+            else:
+                return
+
+        s = input('Ingrese el número en esa base: ')
+        try:
+            d = convertir_base_a_decimal(s, b)
+            print('Decimal:', d)
+        except Exception as e:
+            print('Error:', e)
+            print('1) Reintentar')
+            print('2) Volver al menú principal')
+            ele = input('Elija una opción: ')
+            if ele == '1' or ele == '':
+                continue
+            else:
+                return
+
+        accion = post_conversion_menu()
+        if accion == 'submenu':
+            continue
+        elif accion == 'main':
+            return
+        elif accion == 'exit':
+            sys.exit(0)
 
 
 def menu_complemento_a_dos():
-    x = int(input('Ingrese número entero (positivo o negativo): '))
-    bits = int(input('Ingrese número de bits (ej. 8, 16, 32): '))
-    try:
-        ca2 = complemento_a_dos(x, bits)
-        print(f'Representación Ca2 ({bits} bits):', ca2)
-        reconv = complemento_a_dos_a_decimal(ca2)
-        print('Reconversión a decimal desde Ca2:', reconv)
-    except OverflowError as e:
-        print('Error:', e)
+    while True:
+        x_str = input('Ingrese número entero (positivo o negativo): ')
+        try:
+            x = int(x_str)
+        except Exception:
+            print('Entrada no válida')
+            print('1) Reintentar')
+            print('2) Volver al menú principal')
+            ele = input('Elija una opción: ')
+            if ele == '1' or ele == '':
+                continue
+            else:
+                return
+
+        bits_str = input('Ingrese número de bits (ej. 8, 16, 32): ')
+        try:
+            bits = int(bits_str)
+            if bits <= 0:
+                raise ValueError()
+        except Exception:
+            print('Bits inválidos')
+            print('1) Reintentar')
+            print('2) Volver al menú principal')
+            ele = input('Elija una opción: ')
+            if ele == '1' or ele == '':
+                continue
+            else:
+                return
+
+        try:
+            ca2 = complemento_a_dos(x, bits)
+            print(f'Representación Ca2 ({bits} bits):', ca2)
+            reconv = complemento_a_dos_a_decimal(ca2)
+            print('Reconversión a decimal desde Ca2:', reconv)
+        except OverflowError as e:
+            print('Error:', e)
+            print('1) Reintentar')
+            print('2) Volver al menú principal')
+            ele = input('Elija una opción: ')
+            if ele == '1' or ele == '':
+                continue
+            else:
+                return
+
+        accion = post_conversion_menu()
+        if accion == 'submenu':
+            continue
+        elif accion == 'main':
+            return
+        elif accion == 'exit':
+            sys.exit(0)
 
 
 def menu_avanzado():
