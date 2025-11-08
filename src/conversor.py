@@ -9,10 +9,11 @@ def type_print(text, delay=0.02):
     print()
 
 
-def print_menu_box(title, options, pause=0.12):
+def print_menu_box(title, options, pause=0.52):
     time.sleep(pause)
     width = max(len(title), *(len(o) for o in options)) + 6
     top = '+' + '-' * (width - 2) + '+'
+    
     print(top)
     print('| ' + title.center(width - 4) + ' |')
     print('+' + '=' * (width - 2) + '+')
