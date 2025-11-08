@@ -15,23 +15,20 @@ def type_print(text, delay=0.02, end=True):
 
 
 def print_menu_box(title, options, pause=0.22):
-    time.sleep(pause)
-    width = max(len(title), *(len(o) for o in options)) + 6
-    top = '+' + '-' * (width - 2) + '+'
-    
     print()
-    print(top)
-    # título animado opcional
+    time.sleep(pause)
+    width = max(len(title), *(len(o) for o in options))
+
+    # título animado opcional (sin caja ASCII)
     if ANIMATE_TITLES:
-        print('| ', end='')
-        type_print(title.center(width - 4), delay=TITLE_DELAY, end=False)
-        print(' |')
+        type_print(title.center(width), delay=TITLE_DELAY)
     else:
-        print('| ' + title.center(width - 4) + ' |')
-    print('+' + '=' * (width - 2) + '+')
+        print(title.center(width))
+
+    # opciones (sin animación)
+    print()
     for o in options:
-        print('| ' + o.ljust(width - 4) + ' |')
-    print(top)
+        print(o)
     print()
 
 
