@@ -280,6 +280,8 @@ def menu_complemento_a_dos():
 
                 type_print('Suma de contribuciones = ' + str(total))
                 type_print('Decimal reconvertido: ' + str(reconv))
+                # resumen corto
+                type_print(f'Resumen breve: MSB=0 → valor = int(Ca2) = {reconv}')
             else:
                 type_print('Bit de signo 1 -> número negativo')
                 # método: calcular valor -2^N + int(ca2,2)
@@ -291,6 +293,8 @@ def menu_complemento_a_dos():
                 suma_inv = (int(inv, 2) + 1)
                 type_print('Sumar 1 al C1 para obtener |X|: ' + str(suma_inv))
                 type_print('Decimal reconvertido: ' + str(valor))
+                # resumen corto
+                type_print(f'Resumen breve: MSB=1 → valor = int(Ca2) - 2^{bits} = {int(ca2,2)} - {1<<bits} = {valor} (equiv. invertir+1 → {suma_inv})')
         except OverflowError as e:
             print('Error:', e)
             print('1) Reintentar')
