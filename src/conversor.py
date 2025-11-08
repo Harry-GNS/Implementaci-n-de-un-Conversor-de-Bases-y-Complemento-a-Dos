@@ -247,6 +247,7 @@ def menu_complemento_a_dos():
                 type_print(f'Sumar 1 al C1 -> Complemento a dos (Ca2): {ca2}')
 
             # Verificación / reconversión mostrando el proceso
+            type_print('')
             type_print('--- Verificación: revertir Ca2 a decimal ---')
             type_print(f'Ca2 actual: {ca2}')
             if ca2[0] == '0':
