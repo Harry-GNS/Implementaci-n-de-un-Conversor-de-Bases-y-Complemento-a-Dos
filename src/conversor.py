@@ -1,3 +1,6 @@
+import sys
+
+
 def convertir_decimal_a_base_entera(numero, base):
     digitos = "0123456789ABCDEF"
     if numero == 0:
@@ -46,16 +49,31 @@ def complemento_a_dos_a_decimal(binario_str):
 
 
 def menu_decimal_a_otras_bases():
-    try:
-        n = int(input('Ingrese un número entero decimal positivo: '))
-    except ValueError:
-        print('Entrada no válida')
-        return
-    if n < 0:
-        print('Número debe ser positivo')
-        return
     while True:
-        print('\nConvertir a:')
+        entrada = input('Ingrese un número entero decimal positivo: ')
+        try:
+            n = int(entrada)
+            if n < 0:
+                print('Número debe ser positivo')
+                print('1) Reintentar')
+                print('2) Volver al menú principal')
+                ele = input('Elija una opción: ')
+                if ele == '1' or ele == '':
+                    continue
+                else:
+                    return
+            break
+        except ValueError:
+            print('Entrada no válida')
+            print('1) Reintentar')
+            print('2) Volver al menú principal')
+            ele = input('Elija una opción: ')
+            if ele == '1' or ele == '':
+                continue
+            else:
+                return
+    while True:
+        print('\nConvertir', n, 'a:')
         print('1) Binario')
         print('2) Octal')
         print('3) Hexadecimal')
@@ -64,18 +82,47 @@ def menu_decimal_a_otras_bases():
         op = input('Elija una opción: ')
         if op == '1':
             print('Binario:', convertir_decimal_a_base_entera(n, 2))
+            accion = post_conversion_menu()
         elif op == '2':
             print('Octal:', convertir_decimal_a_base_entera(n, 8))
+            accion = post_conversion_menu()
         elif op == '3':
             print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
+            accion = post_conversion_menu()
         elif op == '4' or op == '':
             print('Binario:', convertir_decimal_a_base_entera(n, 2))
             print('Octal:', convertir_decimal_a_base_entera(n, 8))
             print('Hexadecimal:', convertir_decimal_a_base_entera(n, 16))
+            accion = post_conversion_menu()
         elif op == '5':
             break
         else:
             print('Opción no válida')
+            continue
+
+        if accion == 'submenu':
+            continue
+        elif accion == 'main':
+            break
+        elif accion == 'exit':
+            sys.exit(0)
+
+
+def post_conversion_menu():
+    print('\nQué desea hacer ahora:')
+    print('1) Volver al submenú')
+    print('2) Volver al menú principal')
+    print('3) Salir del programa')
+    elec = input('Elija una opción: ')
+    if elec == '1' or elec == '':
+        return 'submenu'
+    elif elec == '2':
+        return 'main'
+    elif elec == '3':
+        return 'exit'
+    else:
+        print('Opción no válida, volviendo al submenú')
+        return 'submenu'
 
 
 def menu_otras_bases_a_decimal():
