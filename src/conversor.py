@@ -9,17 +9,21 @@ def type_print(text, delay=0.02):
     print()
 
 
-def print_menu_box(title, options, pause=0.52):
+def print_menu_box(title, options, pause=0.22):
     time.sleep(pause)
     width = max(len(title), *(len(o) for o in options)) + 6
     top = '+' + '-' * (width - 2) + '+'
     
+    print()
+    print()
     print(top)
     print('| ' + title.center(width - 4) + ' |')
     print('+' + '=' * (width - 2) + '+')
     for o in options:
         print('| ' + o.ljust(width - 4) + ' |')
     print(top)
+    print()
+    print()
 
 
 def convertir_decimal_a_base_entera(numero, base):
