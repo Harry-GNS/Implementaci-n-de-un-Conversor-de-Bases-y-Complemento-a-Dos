@@ -166,11 +166,7 @@ def procesar_complemento_a_dos(numero, bits_num):
 
 
 def suma_ca2(operando_a, operando_b, bits_operacion):
-    """Suma con complemento a dos en N bits.
 
-    Devuelve un diccionario con:
-      ca2_a, ca2_b, ca2_resultado, reconvertido, overflow, resultado_esperado
-    """
     ca2_a = complemento_a_dos(operando_a, bits_operacion)
     ca2_b = complemento_a_dos(operando_b, bits_operacion)
     resultado_esperado = operando_a + operando_b
@@ -188,6 +184,7 @@ def suma_ca2(operando_a, operando_b, bits_operacion):
         'overflow': overflow,
         'resultado_esperado': resultado_esperado,
     }
+
 
 
 def resta_ca2(operando_a, operando_b, bits_operacion):

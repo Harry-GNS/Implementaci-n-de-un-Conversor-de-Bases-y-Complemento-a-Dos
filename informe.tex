@@ -131,7 +131,7 @@ Se desarrollaron operaciones aritméticas directamente en representación comple
   \begin{figure}[H]
   \centering
   % Captura del método en el código fuente que implementa suma y resta en Ca2
-  \includegraphics[width=0.8\textwidth]{images/fase4_metodo_suma_resta_ca2.png}
+  \includegraphics[width=0.8\textwidth]{arq5.png}
   \caption{Captura de la función suma\_ca2.}
 \end{figure}
 La suma en complemento a dos calcula primero el resultado aritmético en enteros y luego aplica una máscara de N bits para simular el tamaño de palabra. Los operandos y el resultado se expresan en complemento a dos con relleno a N bits. El valor truncado se interpreta con signo revisando el bit más significativo y, si es necesario, aplicando la inversión y suma de uno. Existe desbordamiento cuando el resultado aritmético real queda fuera del intervalo representable con N bits; en ese caso, se indica la condición aunque la codificación truncada conserve solo los N bits menos significativos.
@@ -139,7 +139,7 @@ La suma en complemento a dos calcula primero el resultado aritmético en enteros
   \begin{figure}[H]
   \centering
   % Captura del método en el código fuente que implementa resta en Ca2
-  \includegraphics[width=0.8\textwidth]{images/fase4_metodo_resta_ca2.png}
+  \includegraphics[width=0.8\textwidth]{arq6.png}
   \caption{Captura de la función resta\_ca2.}
 \end{figure}
 La resta en complemento a dos sigue el mismo esquema: se calcula la diferencia en enteros, se trunca con máscara de N bits y se interpreta el resultado en complemento a dos. De forma equivalente puede verse como una suma entre A y el complemento a dos de B. La condición de desbordamiento se determina comparando el resultado aritmético real con el intervalo representable para el ancho elegido, y se señala cuando dicho valor no cabe en N bits con signo.
