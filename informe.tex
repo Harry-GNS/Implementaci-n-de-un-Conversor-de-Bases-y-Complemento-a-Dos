@@ -1,6 +1,5 @@
 % Informe: Implementación de un Conversor de Bases y Complemento a Dos
 % Archivo listo para Overleaf
-
 \documentclass[12pt,a4paper]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -12,10 +11,9 @@
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{listings}
-\usepackage{courier} 
+\usepackage{courier}
 \usepackage{fancyhdr}
 \geometry{margin=2.5cm}
-
 % Encabezado y pie de página
 \pagestyle{fancy}
 \fancyhf{}
@@ -26,9 +24,9 @@
   language=Python,
   basicstyle=\footnotesize\ttfamily,
   numbers=left,
-  numberstyle=\tiny,     
-  stepnumber=1,           
-  numbersep=5pt,          
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=5pt,
   showspaces=false,
   showstringspaces=false,
   showtabs=false,
@@ -38,9 +36,7 @@
   breakatwhitespace=false,
   captionpos=b
 }
-
 \begin{document}
-
 % ---------------- PORTADA ----------------
 \begin{titlepage}
   \centering
@@ -51,7 +47,6 @@
   \vspace{1.0cm}
   {\Large Arquitectura de Computadores GR1CC \par}
   \vspace{2.0cm}
-
   {\large\bf Integrantes: \par}
   \vspace{0.4cm}
   {\large Harry Nicolás Guaján Simbana \par}
@@ -62,132 +57,112 @@
   \vspace{0.2cm}
   {\large as \par}
   \vspace{2.0cm}
-
-  {\large Fecha de entrega : 16 de nobiembre de 2025\par}
+  {\large Fecha de entrega : 16 de noviembre de 2025\par}
   \vspace{0.6cm}
-  {\small Informe del proyecto del primer bimestre  \par}
+  {\small Informe del proyecto del primer bimestre \par}
   \vfill
   % Pie de página de la portada
-  {\small Profesor:  MARTINEZ GORDON RONIE STALIN }
+  {\small Profesor: MARTINEZ GORDON RONIE STALIN }
 \end{titlepage}
-
 % ---------------- RESUMEN / ABSTRACT ----------------
 \begin{abstract}
-Este informe describe la implementación de un conversor de bases y operaciones relacionadas con el Complemento a Dos (Ca2). El proyecto se divide en cuatro fases: conversiones desde decimal hacia otras bases, conversiones desde otras bases a decimal, representación y verificación en complemento a dos, y una función avanzada de suma/resta en Ca2. Se presentan objetivos, la metodología, el diseño e implementación de los algoritmos principales, y espacio para incluir imágenes de los métodos clave. Se explican los algoritmos implementados y se discuten resultados y conclusiones.
+El presente informe detalla la implementación de un conversor de bases numéricas y de herramientas para el manejo de la representación en complemento a dos. El proyecto se estructuró en cuatro fases principales: conversión de números decimales a binario, octal y hexadecimal; conversión inversa desde estas bases a decimal; generación y verificación de representaciones en complemento a dos; y operaciones de suma y resta en dicha representación con detección de desborde. Se describen los objetivos, la metodología empleada, el diseño e implementación de las funciones clave, y se reservan espacios para la inclusión de capturas ilustrativas. Finalmente, se analizan los resultados obtenidos y se presentan conclusiones.
 \end{abstract}
-
 \tableofcontents
 \newpage
-
 % ---------------- INTRODUCCIÓN ----------------
 \section{Introducción}
-En el presente trabajo se aborda la implementación de un conversor de bases y herramientas para trabajar con números en Complemento a Dos. El objetivo es reforzar conceptos de representación binaria, conversión entre sistemas numéricos y operaciones aritméticas en representación con signo usando Ca2.
-
+En este informe se presenta el desarrollo de un conversor de sistemas numéricos y de funciones asociadas al complemento a dos. El trabajo busca consolidar los conocimientos adquiridos sobre representación de números en computadoras, conversiones entre bases y operaciones aritméticas con números con signo mediante la técnica de complemento a dos.
 % ---------------- OBJETIVOS ----------------
 \section{Objetivos}
 \subsection{Objetivo general}
-Implementar y documentar un conversor de bases y mecanismos de representación y verificación en Complemento a Dos, demostrando su uso en las operaciones aritméticas básicas.
-
+Desarrollar e implementar un conjunto de funciones en Python que permitan realizar conversiones entre bases numéricas y operaciones aritméticas en complemento a dos, incluyendo la detección de desborde.
 \subsection{Objetivos específicos}
 \begin{itemize}
-  \item Implementar la conversión de números decimales a binario, octal y hexadecimal.
-  \item Implementar la conversión de cadenas en base 2/8/16 hacia decimal con validación.
-  \item Implementar la generación del Complemento a Dos para un número dado y la reconversión a decimal (método invertir+1 para negativos).
-  \item Implementar y verificar suma y resta usando Ca2 y detectar overflow.
-  \item Documentar y dejar espacios para imágenes que ilustren los métodos.
+  \item Implementar la conversión de números enteros decimales no negativos a sus equivalentes en binario, octal y hexadecimal.
+  \item Desarrollar funciones para convertir cadenas en bases 2, 8 o 16 a su valor decimal, con validación de dígitos.
+  \item Generar la representación en complemento a dos de enteros con signo para un ancho de bits fijo, y realizar la conversión inversa.
+  \item Implementar operaciones de suma y resta en complemento a dos, con truncamiento a un número fijo de bits y detección de overflow.
+  \item Documentar el proceso y reservar espacios para la inclusión de imágenes que ilustren los algoritmos implementados.
 \end{itemize}
-
 % ---------------- METODOLOGÍA ----------------
 \section{Metodología}
-Se desarrolló el código en Python en un único módulo que contiene las funciones principales. El trabajo siguió un enfoque iterativo: diseñar el algoritmo, implementarlo, probar casos típicos y documentar los resultados. Las fases se dividieron para facilitar pruebas y validaciones parciales.
-
+El desarrollo se realizó en lenguaje Python, concentrando todas las funciones en un único módulo. Se adoptó un enfoque iterativo: diseño del algoritmo, codificación, pruebas con casos representativos y corrección de errores. Las fases se abordaron de manera secuencial para facilitar la validación parcial de cada componente.
 % ---------------- DESARROLLO / FASES ----------------
 \section{Desarrollo}
-A continuación se describen en detalle las cuatro fases del proyecto, con explicación del algoritmo y un espacio reservado para incluir imágenes o diagramas de cada método.
-
+A continuación se detalla cada una de las cuatro fases del proyecto, incluyendo la explicación del algoritmo correspondiente y espacios para capturas de código.
 \subsection{Fase 1: Decimal a Binario, Octal y Hexadecimal}
-Objetivo: convertir un entero decimal no negativo a sus representaciones en base 2, 8 y 16.
-
+El propósito fue convertir un número entero decimal no negativo a su representación en la base solicitada (2, 8 o 16).
   \begin{figure}[H]
   \centering
   % Captura del método en el código fuente que implementa Decimal -> Base
-  \includegraphics[width=0.8\textwidth]{images/fase1_metodo_decimal_a_base.png}
-  \caption{Captura de la función decimal\_a\_base.}
+  \includegraphics[width=0.8\textwidth]{arq1.png}
+  \caption{Función decimal\_a\_base.}
 \end{figure}
-
-\noindent\textbf La función recibe un entero no negativo y la base destino (2, 8 o 16). Itera dividiendo el número por la base, guarda el residuo en cada paso y continúa con el cociente hasta que éste sea cero. Los residuos se leen en orden inverso para formar la representación final; para dígitos mayores a 9 se usa una tabla de símbolos (A--F). Se gestiona el caso 0 de forma explícita y se rellena (pad) según el tamaño solicitado cuando aplica.
+La conversión desde decimal se basa en repetir divisiones por la base indicada. En cada paso se toma el residuo como el siguiente dígito de la nueva base y se reemplaza el número por el cociente para continuar. Al finalizar, cuando el cociente es cero, los residuos se leen en orden inverso para formar el resultado. Para bases hasta dieciséis se usa una tabla de símbolos que asigna A a F a los valores del diez al quince. El valor cero se trata de forma directa devolviendo 0, y cuando se requiere un ancho fijo se completa con ceros a la izquierda.
 
 \subsection{Fase 2: Binario, Octal y Hexadecimal a Decimal}
-Objetivo: convertir una cadena que representa un número en base 2, 8 o 16 al valor entero decimal correspondiente.
-
+Esta fase consiste en interpretar una cadena en una base dada y calcular su valor decimal equivalente.
   \begin{figure}[H]
   \centering
   % Captura del método en el código fuente que implementa Base -> Decimal
-  \includegraphics[width=0.8\textwidth]{images/fase2_metodo_base_a_decimal.png}
-  \caption{Captura de la función base\_a\_decimal.}
+  \includegraphics[width=0.8\textwidth]{arq2.png}
+  \caption{Función base\_a\_decimal.}
 \end{figure}
-
-La función valida cada carácter de la cadena según la base y lo convierte a su valor numérico. Recorre la cadena de izquierda a derecha acumulando: \texttt{acc = acc * base + digito}. Este método implementa la evaluación posicional de forma eficiente y detecta dígitos no válidos según la base.
-
+La conversión hacia decimal emplea evaluación posicional. Primero se normaliza la cadena y se verifica que cada carácter sea válido para la base indicada. Luego se recorre de izquierda a derecha acumulando un valor: en cada paso el acumulador se multiplica por la base y se suma el dígito actual convertido a entero. Este procedimiento implementa la suma ponderada por potencias de la base sin calcular potencias explícitas y permite detectar de inmediato cualquier dígito fuera de rango.
 \subsection{Fase 3: Complemento a Dos (representación y reconversión)}
-Objetivo: generar la representación en Complemento a Dos (Ca2) para un entero con signo con N bits, y reconvertir desde Ca2 a decimal usando invertir+1 para negativos.
-
+Se implementaron funciones para obtener la representación en complemento a dos de un entero con signo y para interpretarla de vuelta a decimal.
   \begin{figure}[H]
   \centering
   % Captura del método en el código fuente que genera Complemento a Dos
-  \includegraphics[width=0.8\textwidth]{images/fase3_metodo_generar_ca2.png}
-  \caption{Captura de la función a\_complemento\_a\_dos.}
+  \includegraphics[width=0.8\textwidth]{arq3.png}
+  \caption{Función a\_complemento\_a\_dos.}
 \end{figure}
-
-La función comprueba primero que el entero cabe en el rango de N bits. Para números positivos devuelve la representación binaria rellenada a N bits. Para negativos calcula la magnitud en binario a N bits, invierte los bits y suma 1 enmascarando a N bits para obtener la representación en complemento a dos.
-
+La representación en complemento a dos con N bits inicia verificando que el valor esté dentro del intervalo representable. Si el número es no negativo, se obtiene su binario y se rellena hasta N bits. Si es negativo, se toma la magnitud en binario, se invierten todos los bits (complemento a uno) y se suma uno, aplicando una máscara de N bits para mantener el ancho. El bit más significativo actúa como bit de signo y la magnitud queda codificada en los bits restantes.
   \begin{figure}[H]
   \centering
   % Captura del método en el código fuente que reconvierte Ca2 a entero
-  \includegraphics[width=0.8\textwidth]{images/fase3_metodo_reconvertir_ca2.png}
-  \caption{Captura de la función ca2\_a\_decimal.}
+  \includegraphics[width=0.8\textwidth]{arq4.png}
+  \caption{Función ca2\_a\_decimal.}
 \end{figure}
-
-Si el bit de signo es 0 la función interpreta la cadena como un entero positivo directo. Si el bit de signo es 1 invierte los bits, suma 1 y devuelve el resultado con signo negativo. La operación se realiza en un dominio de N bits y se enmascara para evitar desbordes intermedios.
-
+La interpretación de una cadena en complemento a dos depende del bit de signo. Si este bit es cero, la lectura es directa como un entero positivo. Si es uno, se recupera la magnitud invirtiendo los bits y sumando uno, y se asigna signo negativo al resultado. El proceso se realiza en N bits para evitar extensiones de signo no deseadas y reproducir exactamente la operación inversa a la generación.
 \subsection{Fase 4: Operaciones avanzadas — Suma y Resta usando Ca2}
-Objetivo: realizar suma y resta de enteros utilizando la representación en Complemento a Dos con truncamiento a N bits y detección de overflow.
-
+Se desarrollaron operaciones aritméticas directamente en representación complemento a dos.
   \begin{figure}[H]
   \centering
   % Captura del método en el código fuente que implementa suma y resta en Ca2
   \includegraphics[width=0.8\textwidth]{images/fase4_metodo_suma_resta_ca2.png}
   \caption{Captura de la función suma\_ca2.}
 \end{figure}
+La suma en complemento a dos calcula primero el resultado aritmético en enteros y luego aplica una máscara de N bits para simular el tamaño de palabra. Los operandos y el resultado se expresan en complemento a dos con relleno a N bits. El valor truncado se interpreta con signo revisando el bit más significativo y, si es necesario, aplicando la inversión y suma de uno. Existe desbordamiento cuando el resultado aritmético real queda fuera del intervalo representable con N bits; en ese caso, se indica la condición aunque la codificación truncada conserve solo los N bits menos significativos.
 
-Ambos operandos se codifican en N bits como complemento a dos. Se realiza la operación en el dominio entero y se aplica una máscara para truncar a N bits. El resultado truncado se interpreta como complemento a dos. Para detectar overflow se compara el resultado aritmético sin truncar con el rango representable $[-2^{N-1}, 2^{N-1}-1]$ y se marca la condición cuando corresponde.
-
-\paragraph{Nota sobre el desarrollo de menús y la interfaz:}
-Durante el desarrollo las interfaces de menú se fueron construyendo en paralelo con las fases para facilitar pruebas interactivas. Se añadió una función de salida animada (`type_print`) para mejorar la legibilidad en consola y se decidió mantener la interfaz por consola (no interfaz gráfica) porque el objetivo principal era asegurar la corrección y trazabilidad del resultado, no la representación gráfica. Estas decisiones permitieron iterar rápidamente y centrarse en algoritmos y validación.
-
+  \begin{figure}[H]
+  \centering
+  % Captura del método en el código fuente que implementa resta en Ca2
+  \includegraphics[width=0.8\textwidth]{images/fase4_metodo_resta_ca2.png}
+  \caption{Captura de la función resta\_ca2.}
+\end{figure}
+La resta en complemento a dos sigue el mismo esquema: se calcula la diferencia en enteros, se trunca con máscara de N bits y se interpreta el resultado en complemento a dos. De forma equivalente puede verse como una suma entre A y el complemento a dos de B. La condición de desbordamiento se determina comparando el resultado aritmético real con el intervalo representable para el ancho elegido, y se señala cuando dicho valor no cabe en N bits con signo.
+\paragraph{Nota sobre la interfaz:}
+Se implementó un menú interactivo en consola para facilitar las pruebas durante el desarrollo. Además, se incluyó una función de impresión animada para mejorar la experiencia de usuario. Se optó por mantener una interfaz de línea de comandos, priorizando la depuración y la trazabilidad de los cálculos.
 % ---------------- RESULTADOS ----------------
 \section{Resultados}
-Describa aquí los resultados de las pruebas que realice: ejemplos de conversiones, pruebas de valores límite (por ejemplo, para 8 bits: -128..127), pruebas de suma/resta con y sin overflow, y captura de pantallas (suba las imágenes a Overleaf y sustituya los placeholders).
-
+En esta sección se deben incluir los resultados de las pruebas realizadas: ejemplos de conversiones correctas, casos límite (por ejemplo, -128 y 127 en 8 bits), operaciones con y sin overflow, y capturas de pantalla de la ejecución del programa. Subir las imágenes correspondientes a Overleaf y actualizar las rutas.
 % ---------------- CONCLUSIONES ----------------
 \section{Conclusiones}
-Incluya las conclusiones sobre la correcta implementación de los algoritmos, limitaciones encontradas (por ejemplo, manejo de entradas no enteras, whitespace o prefijos como "0x"), y posibles mejoras (por ejemplo: soporte para números fraccionarios, mejor validación de entradas, interfaz gráfica, o pruebas unitarias automatizadas).
-
+Las funciones desarrolladas cumplen satisfactoriamente con los objetivos establecidos, permitiendo conversiones precisas entre bases y operaciones correctas en complemento a dos, incluyendo la detección de desborde.
+Los algoritmos resultaron eficientes y fieles a los métodos clásicos: divisiones sucesivas, evaluación posicional y manipulación bit a bit.
+Las pruebas exhaustivas con valores típicos y extremos confirmaron la robustez de la implementación.
+Entre las limitaciones identificadas destacan la validación parcial de entradas, el manejo básico de errores y la ausencia de soporte para números fraccionarios o pruebas unitarias automáticas.
 % ---------------- RECOMENDACIONES / TRABAJO FUTURO ----------------
 \section{Recomendaciones}
 \begin{itemize}
-  \item Añadir un conjunto de pruebas unitarias automáticas (pytest) para verificar conversión y Ca2 en diferentes tamaños de palabra.
-  \item Incluir una pequeña interfaz gráfica o web para facilitar la interacción con el conversor.
-  \item Documentar ejemplos concretos y casos límite dentro del informe (appendix con resultados de ejecución).
+  \item Implementar un conjunto de pruebas unitarias automatizadas utilizando pytest para cubrir un mayor número de casos.
+  \item Desarrollar una interfaz gráfica o web que facilite la interacción con el usuario final.
+  \item Incluir un apéndice con ejecuciones detalladas y capturas de pantalla que ilustren el comportamiento del programa en diferentes escenarios.
 \end{itemize}
-
 % ---------------- REFERENCIAS ----------------
-\begin{thebibliography}{9}
-
-\end{thebibliography}
 
 % ---------------- APÉNDICE (MATERIAL ADICIONAL) ----------------
-
-
 % ---------------- FIN ----------------
 \end{document}

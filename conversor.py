@@ -165,6 +165,52 @@ def procesar_complemento_a_dos(numero, bits_num):
         # resumen corto (solo mostrar la magnitud negativa calculada)
 
 
+def suma_ca2(operando_a, operando_b, bits_operacion):
+    """Suma con complemento a dos en N bits.
+
+    Devuelve un diccionario con:
+      ca2_a, ca2_b, ca2_resultado, reconvertido, overflow, resultado_esperado
+    """
+    ca2_a = complemento_a_dos(operando_a, bits_operacion)
+    ca2_b = complemento_a_dos(operando_b, bits_operacion)
+    resultado_esperado = operando_a + operando_b
+    mascara = (1 << bits_operacion) - 1
+    ca2_resultado = format(resultado_esperado & mascara, 'b').zfill(bits_operacion)
+    reconvertido = ca2_to_decimal_invert(ca2_resultado)
+    limite_minimo = -(1 << (bits_operacion - 1))
+    limite_maximo = (1 << (bits_operacion - 1)) - 1
+    overflow = resultado_esperado < limite_minimo or resultado_esperado > limite_maximo
+    return {
+        'ca2_a': ca2_a,
+        'ca2_b': ca2_b,
+        'ca2_resultado': ca2_resultado,
+        'reconvertido': reconvertido,
+        'overflow': overflow,
+        'resultado_esperado': resultado_esperado,
+    }
+
+
+def resta_ca2(operando_a, operando_b, bits_operacion):
+    """Resta con complemento a dos en N bits (A - B)."""
+    ca2_a = complemento_a_dos(operando_a, bits_operacion)
+    ca2_b = complemento_a_dos(operando_b, bits_operacion)
+    resultado_esperado = operando_a - operando_b
+    mascara = (1 << bits_operacion) - 1
+    ca2_resultado = format(resultado_esperado & mascara, 'b').zfill(bits_operacion)
+    reconvertido = ca2_to_decimal_invert(ca2_resultado)
+    limite_minimo = -(1 << (bits_operacion - 1))
+    limite_maximo = (1 << (bits_operacion - 1)) - 1
+    overflow = resultado_esperado < limite_minimo or resultado_esperado > limite_maximo
+    return {
+        'ca2_a': ca2_a,
+        'ca2_b': ca2_b,
+        'ca2_resultado': ca2_resultado,
+        'reconvertido': reconvertido,
+        'overflow': overflow,
+        'resultado_esperado': resultado_esperado,
+    }
+
+
 def menu_decimal_a_otras_bases():
     while True:
         entrada = input('Ingrese un número entero decimal positivo: ')
@@ -347,36 +393,23 @@ def menu_avanzado():
             continue
 
         try:
-            ca2_a = complemento_a_dos(operando_a, bits_operacion)
-            ca2_b = complemento_a_dos(operando_b, bits_operacion)
+            if opcion_avanzado == '1':
+                tipo_operacion = 'Suma'
+                res = suma_ca2(operando_a, operando_b, bits_operacion)
+            else:
+                tipo_operacion = 'Resta'
+                res = resta_ca2(operando_a, operando_b, bits_operacion)
         except OverflowError as e:
             print('Error en representación de operandos:', e)
             # volver a mostrar el submenú
             continue
 
-        type_print('A (Ca2): ' + ca2_a)
-        type_print('B (Ca2): ' + ca2_b)
+        type_print('A (Ca2): ' + res['ca2_a'])
+        type_print('B (Ca2): ' + res['ca2_b'])
+        type_print(f'{tipo_operacion} decimal esperada: ' + str(res['resultado_esperado']))
+        type_print('Resultado (Ca2, truncado a N bits): ' + res['ca2_resultado'])
 
-        if opcion_avanzado == '1':
-            resultado_esperado = operando_a + operando_b
-            tipo_operacion = 'Suma'
-        else:
-            resultado_esperado = operando_a - operando_b
-            tipo_operacion = 'Resta'
-
-        mascara = (1 << bits_operacion) - 1
-        ca2_resultado = format(resultado_esperado & mascara, 'b').zfill(bits_operacion)
-
-        # mostrar resultado en Ca2 y reconvertir usando invertir+1 para negativos
-        type_print(f'{tipo_operacion} decimal esperada: {resultado_esperado}')
-        type_print('Resultado (Ca2, truncado a N bits): ' + ca2_resultado)
-
-        reconvertido = ca2_to_decimal_invert(ca2_resultado)
-
-        # overflow si el valor aritmético no cabe en N bits
-        limite_minimo = -(1 << (bits_operacion - 1))
-        limite_maximo = (1 << (bits_operacion - 1)) - 1
-        if resultado_esperado < limite_minimo or resultado_esperado > limite_maximo:
+        if res['overflow']:
             print('Advertencia: overflow aritmético - el resultado real no cabe en', bits_operacion, 'bits')
 
         accion = post_conversion_menu()
