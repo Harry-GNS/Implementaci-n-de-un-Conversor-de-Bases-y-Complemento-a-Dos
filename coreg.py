@@ -18,16 +18,17 @@ def print_menu_box(titulo, opciones, pausa=0.22):
     time.sleep(pausa)
     ancho = max(len(titulo), *(len(o) for o in opciones))
 
+
     if ANIMAR_TITULOS:
         type_print(titulo.center(ancho), retraso=RETRASO_TITULO)
     else:
         print(titulo.center(ancho))
 
+    
     print()
     for o in opciones:
         print(o)
     print()
-
 
 # Esta función posee parámetros de número y base los cuales se puede asignar un número mayor a 0 y una base de 2,8,16
 def convertir_decimal_a_base_entera(numero, base):
@@ -42,8 +43,8 @@ def convertir_decimal_a_base_entera(numero, base):
     lista_resultados.reverse()
     return ''.join(lista_resultados)
 
-
 #En esta función se realiza el cambio de una cadena que se encuentra en base 2,8,16 a decimal, el Código se encarga de que las cádenas sean validas.
+
 def convertir_base_a_decimal(cadena, base):
     cadena = cadena.strip().upper()
     valor_decimal = 0
@@ -57,7 +58,6 @@ def convertir_base_a_decimal(cadena, base):
         valor_decimal = valor_decimal * base + dig
     return valor_decimal
 
-
 # En está función recibe un número entre el mínimo y el máximo número que se obtiene a través de los bits dispnibles, por ejemplo 8 el min es -128 y el máx 127
 #El overflow nos ayuda a validar que el número se encuentre en los bits permitidos.
 #El apartado de mascara nos define el máximo que se puede obtener y retorna el enmascaro que es cambiar todo a la izquierda por 1 y después sumar 1.
@@ -70,12 +70,11 @@ def complemento_a_dos(numero, bits):
     enmascarado = numero & mascara
     binario = format(enmascarado, 'b').zfill(bits)
     return binario
-
-
 #La función lo que va a realizar es retornar del complemento a2 a decimal, teniendo en cuenta lógicamente el sigo que posee.
 #Entonces posee un parámetro binario_str que nos indica el valor de bits que posee y que solo son optimos los positivos.
 #Entonces se hace una validación que si el binario_str tiene su valor incial igual a 0 el valor es un entero.
 #Por lo que si termina en 1 el valor entra a una operación del número halado o transformado en deciman y se lo resta con el valor de bits que posee el string o en este caso el binario_str.
+
 def complemento_a_dos_a_decimal(binario_str):
     bits = len(binario_str)
     valor_entero = int(binario_str, 2)
@@ -83,20 +82,17 @@ def complemento_a_dos_a_decimal(binario_str):
         return valor_entero
     else:
         return valor_entero - (1 << bits)
-
-
 #Convertir Ca2 a decimal usando el método invertir+1 para negativos.
 #Entonces realiza una validación de que si ca2_str su primer número es positivo, lo retorna igual.
 #Pero si se comienza con 1 hace el cambio de 1 por 0 y de 0 por 1, invirtiendo la cadena.
 #Por último se asigna una nueva variable magnitud que posee un int con parámetros(invertido,base 2) y esto suma 1, finalizando con agregar el sigo negativo para la variable magnitud.
+
 def ca2_to_decimal_invert(ca2_str):
-    """Convertir Ca2 a decimal usando el método invertir+1 para negativos."""
     if ca2_str[0] == '0':
         return int(ca2_str, 2)
     invertido = ''.join('1' if b == '0' else '0' for b in ca2_str)
     magnitud = int(invertido, 2) + 1
     return -magnitud
-
 
 #Está función posee cosas de las anteriores funciones como la verifiación del rango de acuerdo al número de bits y nos indica el overflow.
 #Produce la máscara y en el primer if valida que si hay un número mayor o igual que 0, se regrese el valor y si hay espación vacíos rellana con N bits.
@@ -106,11 +102,7 @@ def ca2_to_decimal_invert(ca2_str):
 #Lo último lo que hace es volver a pasar de complemento a2 a decimal nuevamente,de acuerdo al singo que posea.
 #Entonces si postivo el decimal se imprime, pero si es negativo lo que realiza lo el cambio de 0 por 1 y de 1 por 0, después suma por 1 y por último transforma e imprime.
 def procesar_complemento_a_dos(numero, bits_num):
-    """Realiza la conversión a complemento a dos y muestra la verificación.
-
-    Lógica extraída desde el menú para mantener el menú limpio.
-    Lanza OverflowError si el número no cabe en los bits indicados.
-    """
+   
     limite_minimo = -(1 << (bits_num - 1))
     limite_maximo = (1 << (bits_num - 1)) - 1
     if numero < limite_minimo or numero > limite_maximo:
@@ -171,49 +163,7 @@ def procesar_complemento_a_dos(numero, bits_num):
         magnitud = int(invertido, 2) + 1
         type_print('Sumar 1 al C1 para obtener |X|: ' + str(magnitud))
         type_print('Decimal reconvertido: -' + str(magnitud))
-
-
-def suma_ca2(operando_a, operando_b, bits_operacion):
-
-    ca2_a = complemento_a_dos(operando_a, bits_operacion)
-    ca2_b = complemento_a_dos(operando_b, bits_operacion)
-    resultado_esperado = operando_a + operando_b
-    mascara = (1 << bits_operacion) - 1
-    ca2_resultado = format(resultado_esperado & mascara, 'b').zfill(bits_operacion)
-    reconvertido = ca2_to_decimal_invert(ca2_resultado)
-    limite_minimo = -(1 << (bits_operacion - 1))
-    limite_maximo = (1 << (bits_operacion - 1)) - 1
-    overflow = resultado_esperado < limite_minimo or resultado_esperado > limite_maximo
-    return {
-        'ca2_a': ca2_a,
-        'ca2_b': ca2_b,
-        'ca2_resultado': ca2_resultado,
-        'reconvertido': reconvertido,
-        'overflow': overflow,
-        'resultado_esperado': resultado_esperado,
-    }
-
-
-
-def resta_ca2(operando_a, operando_b, bits_operacion):
-    """Resta con complemento a dos en N bits (A - B)."""
-    ca2_a = complemento_a_dos(operando_a, bits_operacion)
-    ca2_b = complemento_a_dos(operando_b, bits_operacion)
-    resultado_esperado = operando_a - operando_b
-    mascara = (1 << bits_operacion) - 1
-    ca2_resultado = format(resultado_esperado & mascara, 'b').zfill(bits_operacion)
-    reconvertido = ca2_to_decimal_invert(ca2_resultado)
-    limite_minimo = -(1 << (bits_operacion - 1))
-    limite_maximo = (1 << (bits_operacion - 1)) - 1
-    overflow = resultado_esperado < limite_minimo or resultado_esperado > limite_maximo
-    return {
-        'ca2_a': ca2_a,
-        'ca2_b': ca2_b,
-        'ca2_resultado': ca2_resultado,
-        'reconvertido': reconvertido,
-        'overflow': overflow,
-        'resultado_esperado': resultado_esperado,
-    }
+        
 
 
 def menu_decimal_a_otras_bases():
@@ -301,7 +251,6 @@ def menu_otras_bases_a_decimal():
             print('Opción no válida')
             continue
 
-        # pedir número en la base seleccionada
         while True:
             cadena = input(f'Ingrese el número en base {base}: ')
             try:
@@ -378,7 +327,6 @@ def menu_complemento_a_dos():
 
 
 def menu_avanzado():
-    # Mantener el submenú en bucle para que "Volver al submenú" funcione correctamente
     while True:
         print_menu_box('Avanzado: Suma y Resta (Complemento a 2)', ['1) Suma', '2) Resta', '3) Volver'])
         opcion_avanzado = input('Elija una opción: ')
@@ -394,32 +342,40 @@ def menu_avanzado():
             bits_operacion = int(input('Bits para la operación (ej. 8,16,32): '))
         except Exception:
             print('Entrada inválida')
-            # volver a mostrar el submenú
             continue
 
         try:
-            if opcion_avanzado == '1':
-                tipo_operacion = 'Suma'
-                res = suma_ca2(operando_a, operando_b, bits_operacion)
-            else:
-                tipo_operacion = 'Resta'
-                res = resta_ca2(operando_a, operando_b, bits_operacion)
+            ca2_a = complemento_a_dos(operando_a, bits_operacion)
+            ca2_b = complemento_a_dos(operando_b, bits_operacion)
         except OverflowError as e:
             print('Error en representación de operandos:', e)
-            # volver a mostrar el submenú
             continue
 
-        type_print('A (Ca2): ' + res['ca2_a'])
-        type_print('B (Ca2): ' + res['ca2_b'])
-        type_print(f'{tipo_operacion} decimal esperada: ' + str(res['resultado_esperado']))
-        type_print('Resultado (Ca2, truncado a N bits): ' + res['ca2_resultado'])
+        type_print('A (Ca2): ' + ca2_a)
+        type_print('B (Ca2): ' + ca2_b)
 
-        if res['overflow']:
+        if opcion_avanzado == '1':
+            resultado_esperado = operando_a + operando_b
+            tipo_operacion = 'Suma'
+        else:
+            resultado_esperado = operando_a - operando_b
+            tipo_operacion = 'Resta'
+
+        mascara = (1 << bits_operacion) - 1
+        ca2_resultado = format(resultado_esperado & mascara, 'b').zfill(bits_operacion)
+
+        type_print(f'{tipo_operacion} decimal esperada: {resultado_esperado}')
+        type_print('Resultado (Ca2, truncado a N bits): ' + ca2_resultado)
+
+        reconvertido = ca2_to_decimal_invert(ca2_resultado)
+
+        limite_minimo = -(1 << (bits_operacion - 1))
+        limite_maximo = (1 << (bits_operacion - 1)) - 1
+        if resultado_esperado < limite_minimo or resultado_esperado > limite_maximo:
             print('Advertencia: overflow aritmético - el resultado real no cabe en', bits_operacion, 'bits')
 
         accion = post_conversion_menu()
         if accion == 'submenu':
-            # volver a mostrar el submenú
             continue
         elif accion == 'main':
             return
